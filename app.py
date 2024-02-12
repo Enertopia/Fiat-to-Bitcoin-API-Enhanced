@@ -1,4 +1,4 @@
-# Copyright Emiliano German Solazzi Griminger 2023
+# Copyright Emiliano German Solazzi Griminger 2024
 
 import logging
 from flask import Flask, request, jsonify
