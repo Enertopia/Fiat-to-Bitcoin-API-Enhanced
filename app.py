@@ -27,8 +27,9 @@ config = AppConfig()
 class ConversionService:
     def validate_input_data(self, data):
         try:
-            amount_fiat = Decimal(data.get('amountfiat'))
-            conversion_percentage = Decimal(data.get('conversionpercentage', str(config.default_percentage)))
+            # Adjusted to match the keys from the curl command
+            amount_fiat = Decimal(data.get('amount_fiat'))
+            conversion_percentage = Decimal(data.get('conversion_percentage', str(config.default_percentage)))
             if not Decimal('0') < conversion_percentage <= Decimal('1'):
                 raise ValueError("Conversion percentage must be between 0 (exclusive) and 1 (inclusive).")
             return amount_fiat, conversion_percentage
@@ -53,7 +54,7 @@ class ConversionService:
             'amount_to_wallet': str(amount_to_wallet),
             'amount_to_bank_account': str(amount_to_bank_account),
             'conversion_rate': str(config.conversion_rate),
-            'merchant_conversion_percentage': str(conversion_percentage),
+            'conversion_percentage': str(conversion_percentage),  # Note this change to align with the curl command
             'bank_account_balance': str(config.bank_account_balance),
             'wallet_balance': str(config.wallet_balance)
         }
@@ -66,7 +67,7 @@ service = ConversionService()
 def convert_to_bitcoin():
     try:
         data = request.get_json(force=True)  # force=True to ensure parsing even if content-type header is not set
-        if not data or 'amountfiat' not in data:
+        if not data or 'amount_fiat' not in data:
             logging.error("No valid data provided in request")
             raise ValueError("No valid data provided")
         amount_fiat, conversion_percentage = service.validate_input_data(data)
