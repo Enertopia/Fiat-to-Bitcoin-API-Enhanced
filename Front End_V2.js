@@ -18,13 +18,13 @@ const ConversionForm = ({ onPreview }) => {
         setError('');
 
         try {
-            const response = await axios.post('https://yourserver.com/preview_convert', {
+            const response = await axios.post('https://yourserver.com/convert', {
                 amount_fiat: amount,
-                conversion_percentage: percentage / 100,
+                conversion_percentage: percentage / 100, // Sending as a decimal
             });
             onPreview(response.data);
         } catch (err) {
-            const message = err.response?.data?.message || "Failed to preview conversion. Please try again.";
+            const message = err.response?.data?.error || "Failed to preview conversion. Please try again.";
             setError(message);
         } finally {
             setIsLoading(false);
